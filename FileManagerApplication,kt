@@ -1,0 +1,88 @@
+package com.filemanager.pro
+
+import android.app.Application
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
+import androidx.appcompat.app.AppCompatDelegate
+import com.filemanager.pro.data.database.FileDatabase
+import com.filemanager.pro.data.repository.FileRepository
+import com.filemanager.pro.utils.PreferenceManager
+
+class FileManagerApplication : Application() {
+
+    lateinit var fileRepository: FileRepository
+        private set
+
+    lateinit var preferenceManager: PreferenceManager
+        private set
+
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+
+        // Initialize preferences
+        preferenceManager = PreferenceManager(this)
+
+        // Initialize database and repository
+        val database = FileDatabase.getDatabase(this)
+        fileRepository = FileRepository(database.fileDao(), database.recentFileDao(), database.favoriteDao())
+
+        // Setup notification channels
+        createNotificationChannels()
+
+        // Apply theme
+        applyTheme()
+    }
+
+    private fun createNotificationChannels() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channels = listOf(
+                NotificationChannel(
+                    CHANNEL_FILE_OPERATIONS,
+                    "File Operations",
+                    NotificationManager.IMPORTANCE_LOW
+                ).apply {
+                    description = "Notifications for file operations like copy, move, delete"
+                },
+                NotificationChannel(
+                    CHANNEL_DOWNLOADS,
+                    "Downloads",
+                    NotificationManager.IMPORTANCE_DEFAULT
+                ).apply {
+                    description = "Download progress and completion notifications"
+                },
+                NotificationChannel(
+                    CHANNEL_GENERAL,
+                    "General",
+                    NotificationManager.IMPORTANCE_DEFAULT
+                ).apply {
+                    description = "General app notifications"
+                }
+            )
+
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            channels.forEach { notificationManager.createNotificationChannel(it) }
+        }
+    }
+
+    private fun applyTheme() {
+        val mode = preferenceManager.getThemeMode()
+        AppCompatDelegate.setDefaultNightMode(
+            when (mode) {
+                "light" -> AppCompatDelegate.MODE_NIGHT_NO
+                "dark" -> AppCompatDelegate.MODE_NIGHT_YES
+                else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+            }
+        )
+    }
+
+    companion object {
+        lateinit var instance: FileManagerApplication
+            private set
+
+        const val CHANNEL_FILE_OPERATIONS = "file_operations"
+        const val CHANNEL_DOWNLOADS = "downloads"
+        const val CHANNEL_GENERAL = "general"
+    }
+}

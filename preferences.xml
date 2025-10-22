@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:title="Appearance"
+        app:iconSpaceReserved="false">
+
+        <ListPreference
+            android:key="theme"
+            android:title="Theme"
+            android:summary="Choose app theme"
+            android:entries="@array/theme_entries"
+            android:entryValues="@array/theme_values"
+            android:defaultValue="system"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            android:key="view_mode"
+            android:title="View Mode"
+            android:summary="Choose default view mode"
+            android:entries="@array/view_mode_entries"
+            android:entryValues="@array/view_mode_values"
+            android:defaultValue="list"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="File Options"
+        app:iconSpaceReserved="false">
+
+        <SwitchPreferenceCompat
+            android:key="show_hidden"
+            android:title="Show Hidden Files"
+            android:summary="Display files starting with dot (.)"
+            android:defaultValue="false" />
+
+        <ListPreference
+            android:key="sort_by"
+            android:title="Sort By"
+            android:summary="Choose default sorting"
+            android:entries="@array/sort_by_entries"
+            android:entryValues="@array/sort_by_values"
+            android:defaultValue="name"
+            app:useSimpleSummaryProvider="true" />
+
+        <SwitchPreferenceCompat
+            android:key="sort_ascending"
+            android:title="Ascending Order"
+            android:summary="Sort in ascending order"
+            android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Storage"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:key="clear_recent"
+            android:title="Clear Recent Files"
+            android:summary="Remove all recent files history" />
+
+        <Preference
+            android:key="clear_cache"
+            android:title="Clear Cache"
+            android:summary="Delete temporary files and thumbnails" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="About"
+        app:iconSpaceReserved="false">
+
+        <Preference
+            android:key="version"
+            android:title="Version"
+            android:summary="1.0.0"
+            android:selectable="false" />
+
+        <Preference
+            android:key="rate"
+            android:title="Rate App"
+            android:summary="Rate us on Play Store" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
